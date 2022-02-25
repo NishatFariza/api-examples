@@ -1,7 +1,4 @@
-//error message
-document.getElementById('error-message').style.display ='none'
-//search food
-const searchFood = () =>{
+const searchFood = async () =>{
     const searchField =document.getElementById('search-field')
     const searchText = searchField.value;
     // console.log(searchText);
@@ -13,20 +10,16 @@ const searchFood = () =>{
     else{
          //load data
     const url =`https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`;
-    fetch(url)
-    .then(res => res.json())
-    .then(data => displaySearchResult(data.meals))
-    .catch(error => displayError(error))//jodi kokhono fetch er url ul hoi tahole ey error show korbe
+
+    const res =await fetch(url)
+    const data = await res.json()
+    displaySearchResult(data.meals)
+
+
+    // fetch(url)
+    // .then(res => res.json())
+    // .then(data => displaySearchResult(data.meals))
     }
-}
-
-
-//error message
-const displayError = error => {
-    document.getElementById('error-message').style.display ='block'
-
-//   const errorMassage =document.getElementById('error-message');
-//   errorMassage.classList.add('error-text')
 }
 
 const displaySearchResult = meals =>{
@@ -45,20 +38,31 @@ const displaySearchResult = meals =>{
           <img src="${meal.strMealThumb}" class="card-img-top" alt="..." />
           <div class="card-body">
             <h5 class="card-title">${meal.strMeal}</h5>
-            <p class="card-text">${meal.strInstructions.slice(0, 230)}</p>
+            <p class="card-text">${meal.strInstructions.slice(0, 200)}</p>
           </div>
         </div>  
        `;
        searchResult.appendChild(div)
    })
 }
-
-const loadMealDetails = mealId => {
+//async use instead of fetch
+const loadMealDetails = async mealId => {
     const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId} `
-    fetch(url)
-    .then(res => res.json())
-    .then(data =>displayMealDetails(data.meals[0]))
-}
+
+   try{
+    const res =await fetch(url);
+    const data = await res.json();
+    displayMealDetails(data.meals[0])
+   }
+   catch(error){
+       alert('Something went wrong')
+   }
+
+
+//     fetch(url)
+//     .then(res => res.json())
+//     .then(data =>displayMealDetails(data.meals[0]))
+ }
 
 const displayMealDetails = meal =>{
     console.log(meal)
